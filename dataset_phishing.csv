@@ -1,0 +1,11 @@
+url,label
+https://www.example.com,legitimate
+http://secure-bank-login.example.com,phishing
+https://accounts.google.com/signin,legitimate
+http://free-offer.example-xyz.com/login,phishing
+http google.com,0
+htttps.priyakamble.com,0
+https://priyakamble.com/,0
+ddd://priyakamble.com,0
+http://www.salesforce.com,0
+http://www.salesforce.com.org,0
