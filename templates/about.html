@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About | ProofPixel</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo">
+        <div class="logo-icon">PP</div>
+        <div>
+            <h3>ProofPixel</h3>
+<!--            <p>AI · Phishing Detector</p>-->
+        </div>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+<!--        <li><a href="/chatbot">ChatBot</a></li>-->
+        <li><a href="/contact">Contact Us</a></li>
+
+    </ul>
+</nav>
+
+
+<!-- ABOUT HEADER -->
+<section class="about-header">
+
+<h1>About <span>ProofPixel</span></h1>
+
+<p>
+ProofPixel is cybersecurity platform designed to detect
+phishing and malicious URLs before they can cause harm.
+</p>
+
+</section>
+
+
+
+<!-- PROBLEM + IMPORTANCE -->
+<section class="about-grid">
+
+<div class="info-card problem">
+
+<h3>The Problem We Solve</h3>
+
+<p>
+Phishing attacks are one of the most common and dangerous cyber threats.
+Attackers create fake websites that look real to steal passwords,
+banking details, and personal data.
+</p>
+
+<p>
+Many users cannot easily distinguish between a legitimate and
+a malicious URL this is where ProofPixel helps.
+</p>
+
+</div>
+
+
+<div class="info-card importance">
+
+<h3>Why This Matters</h3>
+
+<ul>
+<li>Financial fraud & identity theft</li>
+<li>Data breaches & account compromise</li>
+<li>Increasing cybercrime year by year</li>
+</ul>
+
+</div>
+
+</section>
+
+
+
+<!-- HOW IT WORKS -->
+<section class="work-section">
+
+<h2>How ProofPixel Works</h2>
+
+<div class="steps">
+
+<div class="step-card">
+<h3>1</h3>
+<h4>Enter a URL</h4>
+<p>Users submit a website link they want to verify.</p>
+</div>
+
+<div class="step-card">
+<h3>2</h3>
+<h4>Execution</h4>
+<p>Our ML model analyzes URL patterns and features.</p>
+</div>
+
+<div class="step-card">
+<h3>3</h3>
+<h4>Instant Result</h4>
+<p>The system predicts whether the link is safe or phishing.</p>
+</div>
+
+</div>
+
+</section>
+
+
+
+
+<!-- WHY TRUST SECTION -->
+
+<section class="trust-section">
+
+<h2>Why Trust <span>ProofPixel?</span></h2>
+
+<div class="trust-box">
+
+<div class="trust-item"> ML-based detection, not rule-based guessing</div>
+
+<div class="trust-item"> Real-time URL analysis</div>
+
+<div class="trust-item"> Privacy-first principles</div>
+
+<div class="trust-item"> Built as a real-world cybersecurity system</div>
+
+</div>
+
+</section>
+
+
+
+<!-- TEAM SECTION -->
+
+<section class="team-section">
+
+<h2>Our Team</h2>
+
+<div class="team-grid">
+
+<div class="team-member">
+<div class="avatar">P</div>
+<h3>Pallavi Garud</h3>
+<p></p>
+</div>
+
+<div class="team-member">
+<div class="avatar">H</div>
+<h3>Hemangi Chinawale</h3>
+<p></p>
+</div>
+
+<div class="team-member">
+<div class="avatar">N</div>
+<h3>Namrata Patil</h3>
+<p></p>
+</div>
+
+<div class="team-member">
+<div class="avatar">P</div>
+<h3>Pooja Matsagar</h3>
+<p></p>
+</div>
+
+</div>
+
+<!--<p class="team-footer">-->
+<!--ProofPixel is developed as a professional cybersecurity platform with-->
+<!--AI-powered URL detection to keep users safe online.-->
+<!--</p>-->
+
+</section>
+
+
+
+<!-- Chatbot Button -->
+<div class="chatbot-widget">
+    <div class="chatbot-btn" onclick="toggleChat()">
+       <img src="{{ url_for('static', filename='bot.jpeg') }}">
+    </div>
+
+    <!-- Chat Box -->
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header">
+            <span>ProofPixel AI</span>
+            <button onclick="toggleChat()">✖</button>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+<!--            <div class="bot-msg">Hello 👋 How can I help you?</div>-->
+              <div class="bot-msg">Hello! How can I help you?</div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Type message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+ </div>
+
+
+
+
+<script>
+function toggleChat(){
+    let box = document.getElementById("chatBox");
+
+    box.style.display =
+    box.style.display === "flex" ? "none" : "flex";
+}
+
+async function sendMessage(){
+
+    let input = document.getElementById("userInput");
+    let msg = input.value.trim();
+
+    if(msg === "") return;
+
+    let body = document.getElementById("chatBody");
+
+    /* Show User Message */
+    body.innerHTML += `
+        <div class="user-msg">${msg}</div>
+    `;
+
+    input.value = "";
+
+    /* Typing message */
+    body.innerHTML += `
+        <div class="bot-msg" id="typing">Typing...</div>
+    `;
+
+    body.scrollTop = body.scrollHeight;
+
+    try{
+
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/x-www-form-urlencoded"
+            },
+            body: "message=" +
+            encodeURIComponent(msg)
+        });
+
+        const data = await response.json();
+
+        document.getElementById("typing").remove();
+
+        body.innerHTML += `
+            <div class="bot-msg">${data.reply}</div>
+        `;
+
+        body.scrollTop = body.scrollHeight;
+
+    } catch(error){
+
+        document.getElementById("typing").remove();
+
+        body.innerHTML += `
+            <div class="bot-msg">
+            Error connecting chatbot.
+            </div>
+        `;
+    }
+}
+
+
+
+</script>
+</body>
+</html>
