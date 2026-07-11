@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ProofPixel | AI Phishing Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='stats.js') }}"></script>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo">
+        <div class="logo-icon">PP</div>
+        <div>
+            <h3>ProofPixel</h3>
+<!--            <p>AI · Phishing Detector</p>-->
+        </div>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+<!--        <li><a href="/chatbot">ChatBot</a></li>-->
+        <li><a href="/contact">Contact Us</a></li>
+    </ul>
+</nav>
+
+<!-- MAIN SECTION -->
+<section class="main">
+
+<div class="main-container">
+
+    <!-- LEFT SIDE CONTENT -->
+    <div class="main-left">
+
+        <h1>ENTER URL TO VERIFY</h1>
+
+        <p class="subtitle">
+            Automated feature extraction and classification of phishing URLs
+        </p>
+
+        <form method="POST" id="urlForm">
+
+            <input type="text" name="url" placeholder="Enter URL to check..." required>
+
+            <button type="submit">DETECT PHISHING</button>
+
+        </form>
+
+        {% if result %}
+        <div class="result">
+            <h3>Result: {{ result }}</h3>
+
+            <h4>Extracted Features:</h4>
+
+            <ul>
+            {% for key, value in features.items() %}
+                <li>{{ key }} : {{ value }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- RIGHT SIDE AI IMAGE -->
+    <div class="ai-visual">
+        <img src="{{ url_for('static', filename='shield.png') }}" alt="AI Shield">
+    </div>
+
+</div>
+
+</section>
+
+<!-- REAL-TIME ANALYSIS STATISTICS -->
+
+<section class="homepage-stats">
+    <div class="homepage-stats-container">
+        <h2>Real-time Analysis Statistics</h2>
+
+        <div class="stats-dashboard">
+            <!-- Left Side: Statistics Cards -->
+            <div class="stats-cards-section">
+                <div class="stats-grid-cards">
+
+
+                    <div class="stat-card-home">
+                        <div class="stat-icon-home safe">✅</div>
+                        <div class="stat-number" id="safe-links">0</div>
+                        <div class="stat-label">Safe Links</div>
+                    </div>
+
+                    <div class="stat-card-home">
+                        <div class="stat-icon-home phishing">⚠️</div>
+                        <div class="stat-number" id="phishing-links">0</div>
+                        <div class="stat-label">Phishing Links</div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!-- Right Side: Charts -->
+            <div class="stats-charts-section">
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <h3>Safe vs Phishing URLs</h3>
+                        <canvas id="pieChart"></canvas>
+                    </div>
+
+                    <div class="chart-box">
+                        <h3>Analysis Overview</h3>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+   <p class="query-text">
+       <b>If any query?</b>
+<a href="/contact">Click Here</a>
+</p>
+</section>
+
+
+
+<style>
+    /* ================= Dashboard Layout ================= */
+.stats-dashboard{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:start;
+}
+
+.stats-grid-cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
+
+.charts-container{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    height:100%;
+}
+
+/* ================= Statistics Section ================= */
+
+.homepage-stats{
+    padding:60px 20px;
+    margin-top:40px;
+    position:relative;
+    overflow:hidden;
+}
+
+.homepage-stats::before{
+    content:"";
+    position:absolute;
+    top:-100px;
+    left:-100px;
+    width:300px;
+    height:300px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(124,92,255,.2),transparent);
+    filter:blur(60px);
+}
+
+.homepage-stats::after{
+    content:"";
+    position:absolute;
+    bottom:-100px;
+    right:-100px;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(0,198,255,.15),transparent);
+    filter:blur(50px);
+}
+
+.homepage-stats-container{
+    max-width:1300px;
+    margin:auto;
+    position:relative;
+    z-index:1;
+}
+
+.homepage-stats-container h2{
+    text-align:center;
+    color:#fff;
+    font-size:2.4rem;
+    margin-bottom:50px;
+    font-weight:600;
+    letter-spacing:1px;
+    text-shadow:0 0 20px rgba(124,92,255,.4);
+}
+
+/* ================= Stat Cards ================= */
+
+.stat-card-home{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:22px;
+    padding:45px 30px;
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    transition:.3s ease;
+}
+
+.stat-card-home:hover{
+    transform:translateY(-8px);
+    box-shadow:
+        0 15px 35px rgba(124,92,255,.3),
+        0 0 40px rgba(0,198,255,.2);
+}
+
+.stat-icon-home{
+    width:85px;
+    height:85px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:3rem;
+    margin-bottom:20px;
+}
+
+.stat-icon-home.safe{
+    background:rgba(40,167,69,.2);
+    border:2px solid rgba(40,167,69,.3);
+}
+
+.stat-icon-home.phishing{
+    background:rgba(220,53,69,.2);
+    border:2px solid rgba(220,53,69,.3);
+}
+
+.stat-number{
+    font-size:3.2rem;
+    font-weight:700;
+    color:#fff;
+    margin-bottom:12px;
+}
+
+.stat-label{
+    color:rgba(255,255,255,.8);
+    font-size:1rem;
+    font-weight:500;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+}
+
+/* ================= Charts ================= */
+
+.chart-box{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:22px;
+    padding:25px;
+    text-align:center;
+    transition:.3s ease;
+}
+
+.chart-box:hover{
+    transform:translateY(-5px);
+    box-shadow:
+        0 15px 35px rgba(124,92,255,.3),
+        0 0 40px rgba(0,198,255,.2);
+}
+
+.chart-box h3{
+    color:#fff;
+    margin-bottom:20px;
+    font-size:1.2rem;
+    font-weight:600;
+}
+
+.chart-box canvas{
+    width:100%;
+    max-height:240px;
+}
+
+/* ================= Responsive ================= */
+
+@media (max-width:768px){
+
+    .stats-dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .charts-container{
+        grid-template-columns:1fr;
+    }
+
+    .stats-grid-cards{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .homepage-stats-container h2{
+        font-size:2rem;
+    }
+
+    .stat-card-home{
+        min-height:220px;
+        padding:35px 20px;
+    }
+}
+
+@media (max-width:480px){
+
+    .stats-grid-cards{
+        grid-template-columns:1fr;
+    }
+
+    .stat-card-home{
+        min-height:200px;
+        padding:30px 20px;
+    }
+
+    .stat-icon-home{
+        width:70px;
+        height:70px;
+        font-size:2.5rem;
+    }
+
+    .stat-number{
+        font-size:2.5rem;
+    }
+
+    .chart-box canvas{
+        max-height:180px;
+    }
+}
+</style>
+
+
+
+
+
+
+
+
+
+<!------------------------------ Chatbot Button ----------------------->
+<div class="chatbot-widget">
+    <div class="chatbot-btn" onclick="toggleChat()">
+       <img src="{{ url_for('static', filename='bot.jpeg') }}">
+    </div>
+
+    <!-- Chat Box -->
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header">
+            <span>ProofPixel AI</span>
+            <button onclick="toggleChat()">✖</button>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+            <div class="bot-msg">Hello! How can I help you?</div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Type message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+ </div>
+
+
+
+
+<script>
+function toggleChat(){
+    let box = document.getElementById("chatBox");
+
+    box.style.display =
+    box.style.display === "flex" ? "none" : "flex";
+}
+
+async function sendMessage(){
+
+    let input = document.getElementById("userInput");
+    let msg = input.value.trim();
+
+    if(msg === "") return;
+
+    let body = document.getElementById("chatBody");
+
+    /* Show User Message */
+    body.innerHTML += `
+        <div class="user-msg">${msg}</div>
+    `;
+
+    input.value = "";
+
+    /* Typing message */
+    body.innerHTML += `
+        <div class="bot-msg" id="typing">Typing...</div>
+    `;
+
+    body.scrollTop = body.scrollHeight;
+
+    try{
+
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/x-www-form-urlencoded"
+            },
+            body: "message=" +
+            encodeURIComponent(msg)
+        });
+
+        const data = await response.json();
+
+        document.getElementById("typing").remove();
+
+        body.innerHTML += `
+            <div class="bot-msg">${data.reply}</div>
+        `;
+
+        body.scrollTop = body.scrollHeight;
+
+    } catch(error){
+
+        document.getElementById("typing").remove();
+
+        body.innerHTML += `
+            <div class="bot-msg">
+            Error connecting chatbot.
+            </div>
+        `;
+    }
+}
+</script>
+
+
+
+
+
+</body>
+</html>
