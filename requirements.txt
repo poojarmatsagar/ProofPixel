@@ -1,0 +1,10 @@
+Flask
+dotenv
+scikit-learn
+pandas
+numpy
+tldextract
+beautifulsoup4
+requests
+joblib
+
