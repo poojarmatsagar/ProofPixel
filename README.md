@@ -163,3 +163,8 @@ The ProofPixel application exposes the following REST API endpoints:
 - Mobile Application
 - Larger phishing dataset for improved accuracy
 
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+See the [LICENSE](LICENSE) file for more details.
